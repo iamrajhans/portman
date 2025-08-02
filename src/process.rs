@@ -46,7 +46,7 @@ impl ProcessManager {
                 Ok(process.kill())
             }
         } else {
-            Err(anyhow::anyhow!("Process with PID {} not found", pid))
+            Err(anyhow::anyhow!("Process with PID {pid} not found"))
         };
 
         result
@@ -61,7 +61,10 @@ impl ProcessManager {
         self.system.process(sysinfo_pid).map(|process| ProcessInfo {
             pid,
             name: process.name().to_string(),
-            command: format!("{} {}", process.name(), process.cmd().join(" ")),
+            command: {
+                let cmd_args = process.cmd().join(" ");
+                format!("{} {cmd_args}", process.name())
+            },
             memory_usage: process.memory(),
             cpu_usage: process.cpu_usage(),
             start_time: process.start_time(),
@@ -145,13 +148,13 @@ pub fn format_duration(seconds: u64) -> String {
     let secs = seconds % 60;
 
     if days > 0 {
-        format!("{}d {}h", days, hours)
+        format!("{days}d {hours}h")
     } else if hours > 0 {
-        format!("{}h {}m", hours, minutes)
+        format!("{hours}h {minutes}m")
     } else if minutes > 0 {
-        format!("{}m {}s", minutes, secs)
+        format!("{minutes}m {secs}s")
     } else {
-        format!("{}s", secs)
+        format!("{secs}s")
     }
 }
 
@@ -167,9 +170,10 @@ pub fn format_memory(bytes: u64) -> String {
     }
 
     if unit_index == 0 {
-        format!("{} {}", size as u64, UNITS[unit_index])
+        let size_u64 = size as u64;
+        format!("{size_u64} {unit}", unit = UNITS[unit_index])
     } else {
-        format!("{:.1} {}", size, UNITS[unit_index])
+        format!("{size:.1} {unit}", unit = UNITS[unit_index])
     }
 }
 
@@ -198,7 +202,7 @@ mod tests {
     fn test_process_manager_creation() {
         let _manager = ProcessManager::new();
         // Just verify we can create a manager without panicking
-        assert!(true);
+        // Just verify we can create a manager without panicking
     }
 
     #[test]

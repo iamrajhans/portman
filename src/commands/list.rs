@@ -24,7 +24,7 @@ pub async fn execute(
                         ports.retain(|port_info| port_info.port >= start && port_info.port <= end);
                     }
                     Err(e) => {
-                        display_error(&format!("Invalid range: {}", e));
+                        display_error(&format!("Invalid range: {e}"));
                         return Ok(());
                     }
                 }
@@ -47,7 +47,7 @@ pub async fn execute(
             display_ports(&ports, &format);
         }
         Err(e) => {
-            display_error(&format!("Failed to scan ports: {}", e));
+            display_error(&format!("Failed to scan ports: {e}"));
         }
     }
 

@@ -68,7 +68,7 @@ fn display_table(ports: &[PortInfo]) {
         .with(Modify::new(Columns::single(4)).with(Alignment::center()))
         .with(Modify::new(Columns::single(5)).with(Alignment::right()));
 
-    println!("{}", table);
+    println!("{table}");
 
     // Add colored summary line
     println!(
@@ -136,12 +136,14 @@ fn format_process_simple(process_name: &str, max_length: usize) -> String {
 // Keep old functions for potential future use
 #[allow(dead_code)]
 fn format_port(port: u16) -> String {
-    format!("{}", port.to_string().cyan().bold())
+    let formatted_port = port.to_string().cyan().bold();
+    format!("{formatted_port}")
 }
 
 #[allow(dead_code)]
 fn format_pid(pid: u32) -> String {
-    format!("{}", pid.to_string().blue())
+    let formatted_pid = pid.to_string().blue();
+    format!("{formatted_pid}")
 }
 
 #[allow(dead_code)]
@@ -163,7 +165,8 @@ fn truncate_command(command: &str, max_length: usize) -> String {
     if command.len() <= max_length {
         command.to_string()
     } else {
-        format!("{}...", &command[..max_length.saturating_sub(3)])
+        let truncated = &command[..max_length.saturating_sub(3)];
+        format!("{truncated}...")
     }
 }
 
@@ -171,7 +174,8 @@ fn truncate_string(input: &str, max_length: usize) -> String {
     if input.len() <= max_length {
         input.to_string()
     } else {
-        format!("{}...", &input[..max_length.saturating_sub(3)])
+        let truncated = &input[..max_length.saturating_sub(3)];
+        format!("{truncated}...")
     }
 }
 
@@ -208,7 +212,7 @@ pub fn display_info(message: &str) {
 }
 
 pub fn confirm_action(message: &str) -> bool {
-    print!("{} [y/N]: ", message);
+    print!("{message} [y/N]: ");
     std::io::Write::flush(&mut std::io::stdout()).unwrap();
 
     let mut input = String::new();

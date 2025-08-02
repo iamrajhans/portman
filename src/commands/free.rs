@@ -20,7 +20,7 @@ pub async fn execute(common: bool, force: bool) -> Result<()> {
             .map(|port_info| port_info.port)
             .collect(),
         Err(e) => {
-            display_error(&format!("Failed to scan ports: {}", e));
+            display_error(&format!("Failed to scan ports: {e}"));
             return Ok(());
         }
     };
@@ -30,14 +30,14 @@ pub async fn execute(common: bool, force: bool) -> Result<()> {
         return Ok(());
     }
 
+    let ports_list = occupied_ports
+        .iter()
+        .map(|p| p.to_string())
+        .collect::<Vec<_>>()
+        .join(", ");
     display_info(&format!(
-        "Found processes on {} common development ports: {}",
-        occupied_ports.len(),
-        occupied_ports
-            .iter()
-            .map(|p| p.to_string())
-            .collect::<Vec<_>>()
-            .join(", ")
+        "Found processes on {len} common development ports: {ports_list}",
+        len = occupied_ports.len()
     ));
 
     // Use the kill command to handle the actual killing

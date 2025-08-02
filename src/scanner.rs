@@ -307,6 +307,6 @@ mod tests {
     fn test_port_scanner_creation() {
         let _scanner = PortScanner::new();
         // Just verify we can create a scanner without panicking
-        assert!(true);
+        // Just verify we can create a scanner without panicking
     }
 }

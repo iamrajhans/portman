@@ -22,23 +22,23 @@ pub async fn execute(ports: Vec<u16>, force: bool) -> Result<()> {
                 // Check if this is a system-critical process
                 if process_manager.is_system_critical(&port_info.process_name) {
                     display_warning(&format!(
-                        "Skipping system-critical process on port {}: {} (PID: {})",
-                        port, port_info.process_name, port_info.pid
+                        "Skipping system-critical process on port {port}: {name} (PID: {pid})",
+                        name = port_info.process_name,
+                        pid = port_info.pid
                     ));
                     failed_kills.push((
                         port,
-                        format!("System-critical process: {}", port_info.process_name),
+                        format!("System-critical process: {name}", name = port_info.process_name),
                     ));
                     continue;
                 }
 
                 // Show what will be killed
+                let truncated_cmd = truncate_command(&port_info.command, 50);
                 display_info(&format!(
-                    "Process to kill:\n  Port: {}\n  PID: {}\n  Process: {} ({})",
-                    port,
-                    port_info.pid,
-                    port_info.process_name,
-                    truncate_command(&port_info.command, 50)
+                    "Process to kill:\n  Port: {port}\n  PID: {pid}\n  Process: {name} ({truncated_cmd})",
+                    pid = port_info.pid,
+                    name = port_info.process_name
                 ));
 
                 // Ask for confirmation unless force flag is used
@@ -46,8 +46,8 @@ pub async fn execute(ports: Vec<u16>, force: bool) -> Result<()> {
                     true
                 } else {
                     confirm_action(&format!(
-                        "Kill process {} on port {}?",
-                        port_info.process_name, port
+                        "Kill process {name} on port {port}?",
+                        name = port_info.process_name
                     ))
                 };
 
@@ -55,22 +55,22 @@ pub async fn execute(ports: Vec<u16>, force: bool) -> Result<()> {
                     match process_manager.kill_process(port_info.pid) {
                         Ok(true) => {
                             display_success(&format!(
-                                "Successfully killed process on port {} (PID: {})",
-                                port, port_info.pid
+                                "Successfully killed process on port {port} (PID: {pid})",
+                                pid = port_info.pid
                             ));
                             successful_kills.push(port);
                         }
                         Ok(false) => {
                             display_error(&format!(
-                                "Failed to kill process on port {} (PID: {})",
-                                port, port_info.pid
+                                "Failed to kill process on port {port} (PID: {pid})",
+                                pid = port_info.pid
                             ));
                             failed_kills.push((port, "Kill command failed".to_string()));
                         }
                         Err(e) => {
                             display_error(&format!(
-                                "Error killing process on port {} (PID: {}): {}",
-                                port, port_info.pid, e
+                                "Error killing process on port {port} (PID: {pid}): {e}",
+                                pid = port_info.pid
                             ));
                             failed_kills.push((port, e.to_string()));
                         }
@@ -81,11 +81,11 @@ pub async fn execute(ports: Vec<u16>, force: bool) -> Result<()> {
                 }
             }
             Ok(None) => {
-                display_warning(&format!("No process found on port {}", port));
+                display_warning(&format!("No process found on port {port}"));
                 failed_kills.push((port, "Port not in use".to_string()));
             }
             Err(e) => {
-                display_error(&format!("Error checking port {}: {}", port, e));
+                display_error(&format!("Error checking port {port}: {e}"));
                 failed_kills.push((port, e.to_string()));
             }
         }
@@ -97,24 +97,24 @@ pub async fn execute(ports: Vec<u16>, force: bool) -> Result<()> {
         display_info("Summary:");
 
         if !successful_kills.is_empty() {
+            let ports_list = successful_kills
+                .iter()
+                .map(|p| p.to_string())
+                .collect::<Vec<_>>()
+                .join(", ");
             display_success(&format!(
-                "Successfully killed processes on {} port(s): {}",
-                successful_kills.len(),
-                successful_kills
-                    .iter()
-                    .map(|p| p.to_string())
-                    .collect::<Vec<_>>()
-                    .join(", ")
+                "Successfully killed processes on {count} port(s): {ports_list}",
+                count = successful_kills.len()
             ));
         }
 
         if !failed_kills.is_empty() {
             display_error(&format!(
-                "Failed to kill processes on {} port(s):",
-                failed_kills.len()
+                "Failed to kill processes on {count} port(s):",
+                count = failed_kills.len()
             ));
             for (port, reason) in failed_kills {
-                display_error(&format!("  Port {}: {}", port, reason));
+                display_error(&format!("  Port {port}: {reason}"));
             }
         }
     }
@@ -126,6 +126,7 @@ fn truncate_command(command: &str, max_length: usize) -> String {
     if command.len() <= max_length {
         command.to_string()
     } else {
-        format!("{}...", &command[..max_length.saturating_sub(3)])
+        let truncated = &command[..max_length.saturating_sub(3)];
+        format!("{truncated}...")
     }
 }

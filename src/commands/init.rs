@@ -8,8 +8,8 @@ pub async fn execute(force: bool) -> Result<()> {
     // Check if config file already exists
     if config_path.exists() && !force {
         display_warning(&format!(
-            "Config file already exists: {}",
-            config_path.display()
+            "Config file already exists: {path}",
+            path = config_path.display()
         ));
 
         if !confirm_action("Overwrite existing config file?") {
@@ -20,15 +20,15 @@ pub async fn execute(force: bool) -> Result<()> {
 
     match PortmanConfig::create_default_config(&config_path) {
         Ok(config) => {
-            display_success(&format!("Created config file: {}", config_path.display()));
+            display_success(&format!("Created config file: {path}", path = config_path.display()));
 
             println!("\nGenerated configuration:");
             if let Some(project) = &config.project {
-                println!("  Project: {}", project);
+                println!("  Project: {project}");
             }
             println!("  Ports: {:?}", config.ports);
             if let Some(interval) = config.watch_interval {
-                println!("  Watch interval: {}s", interval);
+                println!("  Watch interval: {interval}s");
             }
 
             println!("\nYou can now:");
@@ -37,7 +37,7 @@ pub async fn execute(force: bool) -> Result<()> {
             println!("  • Use 'portman list' to see current port usage");
         }
         Err(e) => {
-            display_error(&format!("Failed to create config file: {}", e));
+            display_error(&format!("Failed to create config file: {e}"));
         }
     }
 

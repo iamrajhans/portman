@@ -5,8 +5,7 @@ pub async fn execute(limit: usize) -> Result<()> {
     // For now, display a placeholder message since we haven't implemented history tracking yet
     display_warning("History tracking is not yet implemented");
     display_info(&format!(
-        "This feature will show the last {} port management actions",
-        limit
+        "This feature will show the last {limit} port management actions"
     ));
     display_info("Future implementation will track:");
     display_info("  • Processes killed and when");

@@ -33,7 +33,7 @@ fn test_list_command_basic() {
 #[test]
 fn test_check_command_valid_port() {
     let mut cmd = Command::cargo_bin("portman").unwrap();
-    cmd.args(&["check", "60000"]);
+    cmd.args(["check", "60000"]);
 
     // Should succeed and report port as available
     cmd.assert().success();
@@ -52,7 +52,7 @@ fn test_invalid_command() {
 #[test]
 fn test_list_json_format() {
     let mut cmd = Command::cargo_bin("portman").unwrap();
-    cmd.args(&["list", "--format", "json"]);
+    cmd.args(["list", "--format", "json"]);
 
     cmd.assert().success();
 }
@@ -60,7 +60,7 @@ fn test_list_json_format() {
 #[test]
 fn test_list_csv_format() {
     let mut cmd = Command::cargo_bin("portman").unwrap();
-    cmd.args(&["list", "--format", "csv"]);
+    cmd.args(["list", "--format", "csv"]);
 
     cmd.assert().success();
 }
@@ -68,7 +68,7 @@ fn test_list_csv_format() {
 #[test]
 fn test_check_port_range() {
     let mut cmd = Command::cargo_bin("portman").unwrap();
-    cmd.args(&["check", "60000-60010"]);
+    cmd.args(["check", "60000-60010"]);
 
     cmd.assert().success();
 }
@@ -80,7 +80,7 @@ fn test_init_command() {
     let temp_dir = TempDir::new().unwrap();
     let mut cmd = Command::cargo_bin("portman").unwrap();
 
-    cmd.current_dir(temp_dir.path()).args(&["init", "--force"]);
+    cmd.current_dir(temp_dir.path()).args(["init", "--force"]);
 
     cmd.assert().success();
 

@@ -23,7 +23,7 @@ pub async fn execute(port_args: Vec<String>) -> Result<bool> {
                     }
                 }
                 Err(e) => {
-                    display_error(&format!("Invalid range '{}': {}", arg, e));
+                    display_error(&format!("Invalid range '{arg}': {e}"));
                     return Ok(false);
                 }
             }
@@ -31,7 +31,7 @@ pub async fn execute(port_args: Vec<String>) -> Result<bool> {
             match arg.parse::<u16>() {
                 Ok(port) => ports_to_check.push(port),
                 Err(_) => {
-                    display_error(&format!("Invalid port number: {}", arg));
+                    display_error(&format!("Invalid port number: {arg}"));
                     return Ok(false);
                 }
             }
@@ -49,7 +49,7 @@ pub async fn execute(port_args: Vec<String>) -> Result<bool> {
             .map(|info| info.port)
             .collect::<HashSet<_>>(),
         Err(e) => {
-            display_error(&format!("Failed to scan ports: {}", e));
+            display_error(&format!("Failed to scan ports: {e}"));
             return Ok(false);
         }
     };
@@ -57,10 +57,10 @@ pub async fn execute(port_args: Vec<String>) -> Result<bool> {
     // Check each port
     for port in &ports_to_check {
         if occupied_ports.contains(port) {
-            display_error(&format!("Port {} is occupied", port));
+            display_error(&format!("Port {port} is occupied"));
             all_available = false;
         } else {
-            display_success(&format!("Port {} is available", port));
+            display_success(&format!("Port {port} is available"));
         }
     }
 
@@ -69,7 +69,7 @@ pub async fn execute(port_args: Vec<String>) -> Result<bool> {
         if ports_to_check.len() == 1 {
             display_info("Port is available");
         } else {
-            display_info(&format!("All {} ports are available", ports_to_check.len()));
+            display_info(&format!("All {len} ports are available", len = ports_to_check.len()));
         }
     } else {
         display_info("Some ports are occupied");
