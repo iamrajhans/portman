@@ -1,12 +1,12 @@
 # 🔧 Portman
 
-[![CI](https://github.com/yourusername/portman/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/portman/actions/workflows/ci.yml)
-[![Release](https://github.com/yourusername/portman/actions/workflows/release.yml/badge.svg)](https://github.com/yourusername/portman/actions/workflows/release.yml)
+[![CI](https://github.com/iamrajhans/portman/actions/workflows/ci.yml/badge.svg)](https://github.com/iamrajhans/portman/actions/workflows/ci.yml)
+[![Release](https://github.com/iamrajhans/portman/actions/workflows/release.yml/badge.svg)](https://github.com/iamrajhans/portman/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool for managing ports and processes on your system. Solve the common "port already in use" problem with clear visibility and easy management of occupied ports.
 
-![Portman Demo](https://github.com/yourusername/portman/raw/main/demo.gif)
+![Portman Demo](https://github.com/iamrajhans/portman/raw/main/demo.gif)
 
 ## ✨ Features
 
@@ -26,18 +26,18 @@ A powerful CLI tool for managing ports and processes on your system. Solve the c
 
 #### Quick Install (Linux/macOS)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yourusername/portman/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/iamrajhans/portman/main/install.sh | sh
 ```
 
 #### Manual Installation
-1. Download the latest release for your platform from [GitHub Releases](https://github.com/yourusername/portman/releases)
+1. Download the latest release for your platform from [GitHub Releases](https://github.com/iamrajhans/portman/releases)
 2. Extract the archive
 3. Move the binary to your PATH (e.g., `/usr/local/bin/portman`)
 4. Make it executable: `chmod +x portman`
 
 #### Build from Source
 ```bash
-git clone https://github.com/yourusername/portman.git
+git clone https://github.com/iamrajhans/portman.git
 cd portman
 cargo build --release
 sudo cp target/release/portman /usr/local/bin/
@@ -209,7 +209,7 @@ Portman recognizes these common development ports for the `--common` flag:
 
 ### Building
 ```bash
-git clone https://github.com/yourusername/portman.git
+git clone https://github.com/iamrajhans/portman.git
 cd portman
 cargo build
 ```
@@ -255,6 +255,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⭐ Star this repo if you find it useful! ⭐**
 
-[Report Bug](https://github.com/yourusername/portman/issues) · [Request Feature](https://github.com/yourusername/portman/issues) · [Documentation](https://github.com/yourusername/portman/wiki)
+[Report Bug](https://github.com/iamrajhans/portman/issues) · [Request Feature](https://github.com/iamrajhans/portman/issues) · [Documentation](https://github.com/iamrajhans/portman/wiki)
 
 </div>
