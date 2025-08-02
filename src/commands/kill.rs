@@ -28,7 +28,10 @@ pub async fn execute(ports: Vec<u16>, force: bool) -> Result<()> {
                     ));
                     failed_kills.push((
                         port,
-                        format!("System-critical process: {name}", name = port_info.process_name),
+                        format!(
+                            "System-critical process: {name}",
+                            name = port_info.process_name
+                        ),
                     ));
                     continue;
                 }

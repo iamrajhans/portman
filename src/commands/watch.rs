@@ -57,9 +57,7 @@ pub async fn execute(config_path: Option<String>) -> Result<()> {
                         display_success("All monitored ports are available");
                     } else {
                         let port_list = format_port_list(&currently_occupied);
-                        display_warning(&format!(
-                            "Currently occupied ports: {port_list}"
-                        ));
+                        display_warning(&format!("Currently occupied ports: {port_list}"));
 
                         // Show details for occupied ports
                         for port_info in &all_ports {

@@ -69,7 +69,10 @@ pub async fn execute(port_args: Vec<String>) -> Result<bool> {
         if ports_to_check.len() == 1 {
             display_info("Port is available");
         } else {
-            display_info(&format!("All {len} ports are available", len = ports_to_check.len()));
+            display_info(&format!(
+                "All {len} ports are available",
+                len = ports_to_check.len()
+            ));
         }
     } else {
         display_info("Some ports are occupied");

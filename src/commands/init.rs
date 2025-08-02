@@ -20,7 +20,10 @@ pub async fn execute(force: bool) -> Result<()> {
 
     match PortmanConfig::create_default_config(&config_path) {
         Ok(config) => {
-            display_success(&format!("Created config file: {path}", path = config_path.display()));
+            display_success(&format!(
+                "Created config file: {path}",
+                path = config_path.display()
+            ));
 
             println!("\nGenerated configuration:");
             if let Some(project) = &config.project {
