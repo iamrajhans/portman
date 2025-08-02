@@ -1,6 +1,11 @@
 use anyhow::Result;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
-use sysinfo::{Pid, Signal, System};
+use std::time::{SystemTime, UNIX_EPOCH};
+use sysinfo::{Pid, System};
+
+#[cfg(unix)]
+use std::time::Duration;
+#[cfg(unix)]
+use sysinfo::Signal;
 
 pub struct ProcessManager {
     system: System,
