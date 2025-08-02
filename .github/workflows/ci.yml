@@ -46,7 +46,7 @@ jobs:
       run: cargo clippy --all-targets --all-features -- -D warnings
 
     - name: Run tests
-      run: cargo test --verbose --all-features --lib
+      run: cargo test --verbose --all-features -- --skip integration_tests
 
     - name: Check build
       run: cargo check --verbose --all-features
