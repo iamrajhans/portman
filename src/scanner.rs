@@ -72,10 +72,7 @@ impl PortScanner {
         for line in output_str.lines().skip(2) {
             if let Some(port_info) = self.parse_netstat_line(line) {
                 if let Some(pid) = port_info.1 {
-                    pid_to_port
-                        .entry(pid)
-                        .or_insert_with(Vec::new)
-                        .push(port_info.0);
+                    pid_to_port.entry(pid).or_default().push(port_info.0);
                 }
             }
         }
