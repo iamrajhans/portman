@@ -1,0 +1,7 @@
+project: test-app
+ports:
+- 3000
+- 3001
+- 8080
+description: null
+watch_interval: 5

@@ -1,0 +1,143 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+        body: |
+          ## Changes in this Release
+          
+          See [CHANGELOG.md](CHANGELOG.md) for details.
+          
+          ## Installation
+          
+          ### Quick Install (recommended)
+          ```bash
+          # Linux/macOS
+          curl -fsSL https://raw.githubusercontent.com/yourusername/portman/main/install.sh | sh
+          
+          # Or download manually from assets below
+          ```
+          
+          ### Manual Installation
+          1. Download the appropriate binary for your platform from the assets below
+          2. Extract the archive
+          3. Move the `portman` binary to a directory in your PATH (e.g., `/usr/local/bin`)
+          4. Make it executable: `chmod +x portman`
+          
+          ## Usage
+          ```bash
+          # List all occupied ports
+          portman list
+          
+          # Check if port is available
+          portman check 3000
+          
+          # Kill process on port
+          portman kill 3000
+          ```
+
+  build-and-upload:
+    name: Build and upload
+    runs-on: ${{ matrix.os }}
+    needs: create-release
+
+    strategy:
+      matrix:
+        include:
+          - build: linux
+            os: ubuntu-latest
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            archive-name: portman-linux.tar.gz
+          - build: macos
+            os: macos-latest
+            rust: stable
+            target: x86_64-apple-darwin
+            archive-name: portman-macos.tar.gz
+          - build: macos-arm
+            os: macos-latest
+            rust: stable
+            target: aarch64-apple-darwin
+            archive-name: portman-macos-arm64.tar.gz
+          - build: windows
+            os: windows-latest
+            rust: stable
+            target: x86_64-pc-windows-msvc
+            archive-name: portman-windows.zip
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: ${{ matrix.rust }}
+        targets: ${{ matrix.target }}
+
+    - name: Cache cargo registry
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.target }}-cargo-
+
+    - name: Build binary
+      run: cargo build --verbose --release --target ${{ matrix.target }}
+
+    - name: Build archive (Windows)
+      shell: bash
+      run: |
+        binary_name="portman"
+        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          binary_name="portman.exe"
+        fi
+        
+        dirname="portman-${{ github.ref_name }}-${{ matrix.target }}"
+        mkdir "$dirname"
+        
+        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          mv "target/${{ matrix.target }}/release/$binary_name" "$dirname"
+          7z a "${{ matrix.archive-name }}" "$dirname"
+          echo "ASSET=${{ matrix.archive-name }}" >> $GITHUB_ENV
+        else
+          mv "target/${{ matrix.target }}/release/$binary_name" "$dirname"
+          tar -czf "${{ matrix.archive-name }}" "$dirname"
+          echo "ASSET=${{ matrix.archive-name }}" >> $GITHUB_ENV
+        fi
+
+    - name: Upload archive to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./${{ env.ASSET }}
+        asset_name: ${{ env.ASSET }}
+        asset_content_type: application/octet-stream

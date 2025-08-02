@@ -1,0 +1,16 @@
+{
+  "name": "test-web-app",
+  "version": "1.0.0",
+  "description": "Simple test web app for portman demonstration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": ["test", "express", "portman"],
+  "author": "Test",
+  "license": "MIT"
+}

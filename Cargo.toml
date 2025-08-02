@@ -1,0 +1,40 @@
+[package]
+name = "portman"
+version = "1.0.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A powerful CLI tool for managing ports and processes on your system"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/yourusername/portman"
+homepage = "https://github.com/yourusername/portman"
+documentation = "https://github.com/yourusername/portman/wiki"
+keywords = ["cli", "port", "process", "network", "developer-tools"]
+categories = ["command-line-utilities", "development-tools"]
+exclude = [
+    "test-app/*",
+    ".claude/*",
+    "demo.gif",
+    "*.png"
+]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+sysinfo = "0.30"
+tabled = "0.15"
+colored = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+toml = "0.8"
+tokio = { version = "1.0", features = ["full"] }
+anyhow = "1.0"
+
+[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "3.0"
+tempfile = "3.0"
